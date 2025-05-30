@@ -1,0 +1,42 @@
+def show_menu():
+    print("Select operation:")
+    print("1. Add (+)")
+    print("2. Subtract (-)")
+    print("3. Multiply (*)")
+    print("4. Divide (/)")
+
+def get_number(prompt):
+    while True:
+        try:
+            return float(input(prompt))
+        except ValueError:
+            print("Invalid input. Please enter a number.")
+
+def calculate(n1, n2, operation):
+    if operation == "1" or operation == "+":
+        return n1 + n2
+    elif operation == "2" or operation == "-":
+        return n1 - n2
+    elif operation == "3" or operation == "*":
+        return n1 * n2
+    elif operation == "4" or operation == "/":
+        if n2 == 0:
+            return "Error: Cannot divide by zero"
+        return n1 / n2
+    else:
+        return "Invalid operation"
+
+def main():
+    print("--- Simple Calculator ---")
+    show_menu()
+    
+    choice = input("Enter your choice (1/2/3/4 or + - * /): ").strip()
+    num1 = get_number("Enter the first number: ")
+    num2 = get_number("Enter the second number: ")
+
+    result = calculate(num1, num2, choice)
+
+    print(f"Result: {result}")
+
+if __name__ == "__main__":
+    main()
