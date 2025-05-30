@@ -1,0 +1,111 @@
+import json
+import os
+
+DATA_FILE = "contacts.json"
+
+def load_contacts():
+    if os.path.exists(DATA_FILE):
+        with open(DATA_FILE, "r") as file:
+            return json.load(file)
+    return []
+
+def save_contacts(contacts):
+    with open(DATA_FILE, "w") as file:
+        json.dump(contacts, file, indent=4)
+
+def add_contact(contacts):
+    contact = {
+        "name": input("Enter full name: "),
+        "phone": input("Enter phone number: "),
+        "email": input("Enter email: "),
+        "store": input("Enter store name: "),
+        "address": input("Enter address: ")
+    }
+    contacts.append(contact)
+    print("Contact added successfully!")
+
+def show_contacts(contacts):
+    if not contacts:
+        print("No contacts found.")
+        return
+    print("\n--- Contact List ---")
+    for i, c in enumerate(contacts):
+        print(f"{i + 1}. {c['name']} - {c['phone']}")
+
+def search_contact(contacts):
+    keyword = input("Enter name or phone to search: ").lower()
+    found = False
+    for c in contacts:
+        if keyword in c["name"].lower() or keyword in c["phone"]:
+            print("\n--- Contact Found ---")
+            for key, value in c.items():
+                print(f"{key.capitalize()}: {value}")
+            found = True
+            break
+    if not found:
+        print("Contact not found.")
+
+def update_contact(contacts):
+    show_contacts(contacts)
+    try:
+        idx = int(input("Enter contact number to update: ")) - 1
+        if 0 <= idx < len(contacts):
+            print("Leave blank to keep old value.")
+            for key in contacts[idx]:
+                new_val = input(f"{key.capitalize()} ({contacts[idx][key]}): ")
+                if new_val.strip():
+                    contacts[idx][key] = new_val
+            print("Contact updated.")
+        else:
+            print("Invalid contact number.")
+    except ValueError:
+        print("Enter a valid number.")
+
+def delete_contact(contacts):
+    show_contacts(contacts)
+    try:
+        idx = int(input("Enter contact number to delete: ")) - 1
+        if 0 <= idx < len(contacts):
+            confirm = input("Are you sure? (y/n): ").lower()
+            if confirm == "y":
+                removed = contacts.pop(idx)
+                print(f"Deleted: {removed['name']}")
+            else:
+                print("Deletion canceled.")
+        else:
+            print("Invalid number.")
+    except ValueError:
+        print("Invalid input.")
+
+def main():
+    contacts = load_contacts()
+    while True:
+        print("\n--- Contact Book ---")
+        print("1. Add Contact")
+        print("2. View All Contacts")
+        print("3. Search Contact")
+        print("4. Update Contact")
+        print("5. Delete Contact")
+        print("6. Exit")
+
+        choice = input("Choose an option: ").strip()
+
+        if choice == "1":
+            add_contact(contacts)
+        elif choice == "2":
+            show_contacts(contacts)
+        elif choice == "3":
+            search_contact(contacts)
+        elif choice == "4":
+            update_contact(contacts)
+        elif choice == "5":
+            delete_contact(contacts)
+        elif choice == "6":
+            save_contacts(contacts)
+            print("Contacts saved. Exiting.")
+            break
+        else:
+            print("Invalid choice. Please try again.")
+
+if __name__ == "__main__":
+    main()
